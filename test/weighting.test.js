@@ -47,29 +47,28 @@ test.cb('Regular User - Test Weighting For All', t => {
   var weightedList = m.weight(events);
 
   events.forEach(event => {
-    //These events shouldn't exist
     if (event.title === 'plus featured exclusive') {
-      t.is(findExistance(weightedList, event), 0);
-    }
-    if (event.title === 'plus exclusive') {
-      t.is(findExistance(weightedList, event), 0);
-    }
-
-    //These events should be weighted
-    if (event.title === 'plus featured') {
       t.is(findHigherWeight(weightedList, event), 0);
     }
 
-    if (event.title === 'regular featured') {
+    if (event.title === 'plus featured') {
       t.is(findHigherWeight(weightedList, event), 1);
     }
 
-    if (event.title === 'plus regular') {
+    // Same weight?
+    if (event.title === 'regular featured') {
+      t.is(findHigherWeight(weightedList, event), 2);
+    }
+    if (event.title === 'plus exclusive') {
       t.is(findHigherWeight(weightedList, event), 2);
     }
 
+    if (event.title === 'plus regular') {
+      t.is(findHigherWeight(weightedList, event), 4);
+    }
+
     if (event.title === 'regular') {
-      t.is(findHigherWeight(weightedList, event), 3);
+      t.is(findHigherWeight(weightedList, event), 5);
     }
   });
 
@@ -84,32 +83,33 @@ test.cb('Company User - Test Weighting For All', t => {
   var weightedList = m.weight(getTestEvents('company', m.user));
 
   weightedList.forEach(event => {
-    if (event.title === 'company') {
+
+    if (event.title === 'plus featured exclusive') {
       t.is(findHigherWeight(weightedList, event), 0);
     }
 
-    if (event.title === 'plus featured exclusive') {
+    if (event.title === 'plus featured') {
       t.is(findHigherWeight(weightedList, event), 1);
     }
 
-    if (event.title === 'plus featured') {
+    if (event.title === 'plus exclusive') {
       t.is(findHigherWeight(weightedList, event), 2);
     }
 
-    if (event.title === 'plus exclusive') {
+    if (event.title === 'plus regular') {
       t.is(findHigherWeight(weightedList, event), 3);
     }
 
-    if (event.title === 'plus regular') {
+    if (event.title === 'regular featured') {
       t.is(findHigherWeight(weightedList, event), 4);
     }
 
-    if (event.title === 'regular featured') {
+    // Same weight?
+    if (event.title === 'regular') {
       t.is(findHigherWeight(weightedList, event), 5);
     }
-
-    if (event.title === 'regular') {
-      t.is(findHigherWeight(weightedList, event), 6);
+    if (event.title === 'company') {
+      t.is(findHigherWeight(weightedList, event), 5);
     }
   });
 
@@ -126,32 +126,33 @@ test.cb('Regular User - Test Weighting For All', t => {
   var weightedList = m.weight(events);
 
   events.forEach(event => {
-    //These events shouldn't exist
-    if (event.title === 'company') {
-      t.is(findExistance(weightedList, event), 0);
-    }
-    if (event.title === 'plus featured exclusive') {
-      t.is(findExistance(weightedList, event), 0);
-    }
-    if (event.title === 'plus exclusive') {
-      t.is(findExistance(weightedList, event), 0);
-    }
 
-    //These events should be weighted
-    if (event.title === 'plus featured') {
+    if (event.title === 'plus featured exclusive') {
       t.is(findHigherWeight(weightedList, event), 0);
     }
 
-    if (event.title === 'regular featured') {
+    if (event.title === 'plus featured') {
       t.is(findHigherWeight(weightedList, event), 1);
     }
 
-    if (event.title === 'plus regular') {
+    // Same weight?
+    if (event.title === 'plus exclusive') {
       t.is(findHigherWeight(weightedList, event), 2);
     }
+    if (event.title === 'regular featured') {
+      t.is(findHigherWeight(weightedList, event), 2);
+    }
+    
+    if (event.title === 'plus regular') {
+      t.is(findHigherWeight(weightedList, event), 4);
+    }
 
+    // Same weight?
     if (event.title === 'regular') {
-      t.is(findHigherWeight(weightedList, event), 3);
+      t.is(findHigherWeight(weightedList, event), 5);
+    }
+    if (event.title === 'company') {
+      t.is(findHigherWeight(weightedList, event), 5);
     }
   });
 
@@ -231,7 +232,7 @@ function _buildEvent(type, user) {
   var plus;
 
   if (type.indexOf('plus') > -1) {
-    plus = exclusive ? 'exclusive' : 'enhanced';
+    plus = exclusive ? 'plus exclusive' : 'plus enhanced';
   } else {
     plus = 'none';
   }
@@ -240,7 +241,7 @@ function _buildEvent(type, user) {
     _id: uuid(),
     title: type,
     featured: featured,
-    plus_type: plus,
+    event_type: plus,
     company: company
   };
 }
