@@ -76,7 +76,7 @@ test.cb('Regular User - Test Weighting For All', t => {
 });
 
 test.cb('Company User - Test Weighting For All', t => {
-  t.plan(7);
+  t.plan(8);
 
   var m = new Magnises(getUser('plus company'));
 
@@ -110,6 +110,10 @@ test.cb('Company User - Test Weighting For All', t => {
     }
     if (event.title === 'company') {
       t.is(findHigherWeight(weightedList, event), 5);
+    }
+
+    if (event.title === 'company') {
+      t.is(findExistance(weightedList, event), 1);
     }
   });
 
@@ -147,12 +151,12 @@ test.cb('Regular User - Test Weighting For All', t => {
       t.is(findHigherWeight(weightedList, event), 4);
     }
 
-    // Same weight?
     if (event.title === 'regular') {
       t.is(findHigherWeight(weightedList, event), 5);
     }
+
     if (event.title === 'company') {
-      t.is(findHigherWeight(weightedList, event), 5);
+      t.is(findExistance(weightedList, event), 0);
     }
   });
 
